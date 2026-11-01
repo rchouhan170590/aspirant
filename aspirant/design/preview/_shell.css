@@ -1,0 +1,21 @@
+/* shared shell for design system preview cards */
+@import url('../colors_and_type.css');
+
+html, body { margin: 0; padding: 0; }
+body {
+  font: var(--t-body);
+  color: var(--fg-1);
+  background: var(--bg-surface);
+  padding: 24px;
+  box-sizing: border-box;
+  width: 700px;
+}
+* { box-sizing: border-box; }
+.row { display: flex; gap: 16px; align-items: stretch; }
+.col { display: flex; flex-direction: column; gap: 12px; }
+.fill { flex: 1; }
+.label-row { display: flex; justify-content: space-between; align-items: baseline; }
+.eyebrow { font: var(--t-eyebrow); text-transform: uppercase; letter-spacing: 0.12em; color: var(--fg-3); }
+.meta { font: var(--t-meta); color: var(--fg-3); }
+.mono { font: var(--t-mono); color: var(--fg-2); }
+.divider { height: 1px; background: var(--border-2); margin: 0; }

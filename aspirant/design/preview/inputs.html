@@ -1,0 +1,86 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="_shell.css">
+<style>
+.ask {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+  padding: 18px 20px 14px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.ask:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(217,119,6,0.18);
+}
+.ask textarea {
+  width: 100%;
+  min-height: 64px;
+  border: none;
+  outline: none;
+  resize: none;
+  font: 400 18px/1.5 var(--font-serif);
+  color: var(--fg-1);
+  background: transparent;
+  padding: 0;
+}
+.ask textarea::placeholder { color: var(--fg-3); }
+
+.ask-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-2);
+}
+.chips { display:flex; gap:6px; flex-wrap:wrap; }
+.chip {
+  font: 500 11px/1 var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-1);
+  background: transparent;
+  color: var(--fg-2);
+  cursor: pointer;
+}
+.chip.active { background: var(--ink); color: var(--paper-white); border-color: var(--ink); }
+
+.submit {
+  font: 500 14px/1 var(--font-sans);
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper-white);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.kbd {
+  font: 500 10px/1 var(--font-mono);
+  padding: 3px 6px;
+  border-radius: 3px;
+  background: rgba(253,251,246,0.18);
+  color: var(--paper-white);
+  letter-spacing: 0.04em;
+}
+</style>
+</head>
+<body class="ds-base">
+  <div class="ask">
+    <textarea>Explain cooperative federalism with respect to the GST Council</textarea>
+    <div class="ask-foot">
+      <div class="chips">
+        <button class="chip active">Concept</button>
+        <button class="chip">Doubt</button>
+        <button class="chip">MCQ</button>
+        <button class="chip">Mains</button>
+        <button class="chip">Essay</button>
+      </div>
+      <button class="submit">Ask <span class="kbd">⌘ ⏎</span></button>
+    </div>
+  </div>
+  <div class="meta" style="margin-top:14px">Ask field · 18px Spectral · 12px radius · Marigold focus halo · intent chips inline · ⌘⏎ to submit</div>
+</body></html>

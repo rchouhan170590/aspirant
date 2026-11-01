@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>UPSC Brain Agent · Web App</title>
+<link rel="stylesheet" href="../../colors_and_type.css"/>
+<style>
+  html, body { margin:0; padding:0; }
+  body { background:#F7F2E8; font-family: 'Inter', sans-serif; }
+  button { font-family: inherit; }
+  button:focus-visible { outline: 2px solid #D97706; outline-offset: 2px; }
+  button:active:not(:disabled) { transform: translateY(1px); }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="atoms.jsx"></script>
+<script type="text/babel" src="AppShell.jsx"></script>
+<script type="text/babel" src="DigestCard.jsx"></script>
+<script type="text/babel" src="MCQItem.jsx"></script>
+<script type="text/babel" src="AskBox.jsx"></script>
+<script type="text/babel" src="WeakAreaRow.jsx"></script>
+<script type="text/babel">
+const { useState } = React;
+
+const ARTICLES = [
+  {
+    id:1, gs:'GS-3', topic:'Environment',
+    source:'The Hindu', time:'05:42 IST',
+    title:'Forest Conservation Amendment widens 100 km border exemption',
+    summary:'The 2023 Amendment dilutes the protective scope of the 1980 Act by exempting forest land within 100 km of international borders from prior central clearance, raising questions of ecological federalism that aspirants should map to GS-3.',
+    mcqs:3, mains:2, essay:true, pyq:'PYQ 2019',
+    facts:[
+      'Original Forest Conservation Act passed 1980 under Article 252.',
+      'Amendment introduces "strategic" exemption window of 100 km.',
+      'Supreme Court Godavarman judgement (1996) defined "forest" expansively.',
+      'States have raised concerns under federal compact (Article 246).',
+    ],
+    pyqNote:'Tested in Mains 2019 Q9 ("Discuss the role of the Forest Rights Act") and Prelims 2017 (Q on Compensatory Afforestation Fund).',
+  },
+  {
+    id:2, gs:'GS-2', topic:'Polity',
+    source:'Indian Express', time:'05:58 IST',
+    title:'Chief Election Commissioner appointment process under fresh challenge',
+    summary:'A new petition before the Supreme Court contests the 2023 Act constituting the selection committee without the Chief Justice. The case directly engages the Anoop Baranwal verdict and the doctrine of independence of constitutional bodies.',
+    mcqs:3, mains:2, essay:false, pyq:'PYQ 2022',
+    facts:[
+      'Anoop Baranwal v. Union of India (2023) prescribed CJI on panel.',
+      'CEC and Other ECs Act, 2023 replaced CJI with a Cabinet Minister.',
+      'Article 324 governs the Election Commission.',
+      'Federal implications under the basic structure doctrine.',
+    ],
+    pyqNote:'Connects to Mains 2022 Q on tribunals & independence; Prelims 2017 Q on EC composition.',
+  },
+  {
+    id:3, gs:'GS-2', topic:'IR',
+    source:'PIB', time:'06:03 IST',
+    title:'India–EU Trade and Technology Council holds second ministerial',
+    summary:'The TTC focused on semiconductors, digital public infrastructure, and clean energy. For Mains, the salient angle is the convergence with the EU\u2019s Indo-Pacific strategy and divergence on data localisation norms.',
+    mcqs:2, mains:1, essay:true, pyq:'PYQ 2020',
+    facts:[
+      'TTC launched April 2022, modeled on US-EU TTC.',
+      'Working groups: strategic technologies, green tech, trade.',
+      'India is the EU\u2019s 9th-largest trading partner (2024 figures).',
+    ],
+    pyqNote:'Mains 2020 Q on India-EU strategic partnership; Essay 2019 prompt on technology and diplomacy.',
+  },
+];
+
+const MCQS = [
+  {
+    id:1, gs:'GS-2 Polity', pyqPattern:'PYQ 2019 pattern',
+    question:'Which of the following best describes cooperative federalism in the Indian context?',
+    options:[
+      'Centre and States compete for legislative supremacy in the Concurrent List.',
+      'Centre and States act in coordinated pursuit of common national goals.',
+      'States exercise absolute autonomy over all subjects in List II.',
+      'Federalism is replaced entirely by unitary mechanisms during emergencies.',
+    ],
+    correct:1,
+    explanation:'Cooperative federalism, articulated through bodies like the Inter-State Council (Article 263) and GST Council, presumes coordination not competition. Option C overstates state autonomy; even List II has central oversight under Articles 249, 250, 252, 253.',
+  },
+  {
+    id:2, gs:'GS-3 Economy', pyqPattern:'PYQ 2021 pattern',
+    question:'With reference to the Compensatory Afforestation Fund (CAMPA), consider the following statements:',
+    options:[
+      'Funds collected are managed by an autonomous statutory body under MoEFCC.',
+      'States receive 90% of the funds collected for afforestation activities.',
+      'CAMPA was constituted under a 2016 Act of Parliament.',
+    ],
+    correct:2,
+    explanation:'The CAF Act, 2016 placed CAMPA on a statutory footing. Statement 2 is correct in principle (90:10 split). Statement 1 is partly correct but the body is under MoEFCC oversight, not fully autonomous.',
+  },
+];
+
+const WEAK = [
+  { topic:'Federalism', gs:'GS-2 Polity', accuracy:48, attempts:21 },
+  { topic:'Constitutional Bodies', gs:'GS-2 Polity', accuracy:62, attempts:14 },
+  { topic:'Climate Policy', gs:'GS-3 Environment', accuracy:69, attempts:18 },
+  { topic:'External Sector', gs:'GS-3 Economy', accuracy:74, attempts:9 },
+  { topic:'Tribal Communities', gs:'Anthro P2', accuracy:81, attempts:23 },
+  { topic:'Modern History', gs:'GS-1', accuracy:88, attempts:31 },
+];
+
+function TodayView() {
+  const [openId, setOpenId] = useState(1);
+  return <div style={{ display:'grid', gridTemplateColumns:'1fr 280px', gap:48 }}>
+    <div>
+      <div style={{ marginBottom:24 }}>
+        <Eyebrow>Today · 26 April 2026</Eyebrow>
+        <h1 style={{ font:'700 38px/1.15 Spectral, serif', letterSpacing:'-0.015em', margin:'6px 0 8px', color:'#1A1F2E' }}>
+          Twelve articles passed the relevance filter.
+        </h1>
+        <p style={{ font:'400 16px/1.6 Spectral, serif', color:'#4D4738', maxWidth:600, margin:0 }}>
+          Three are essay-grade. Two intersect your weak areas in Polity. The full digest takes about forty minutes to read closely.
+        </p>
+      </div>
+      <div>
+        {ARTICLES.map(a => <DigestCard key={a.id} article={a} expanded={openId===a.id} onToggle={() => setOpenId(openId===a.id ? null : a.id)}/>)}
+      </div>
+    </div>
+    <aside>
+      <div style={{ position:'sticky', top:24 }}>
+        <div style={{ background:'#FDFBF6', border:'1px solid #D8D2C3', borderRadius:8, padding:20, marginBottom:16 }}>
+          <Eyebrow>Today's distribution</Eyebrow>
+          <div style={{ marginTop:12, display:'flex', flexDirection:'column', gap:8 }}>
+            {[['GS-1',2],['GS-2',4],['GS-3',5],['GS-4',1]].map(([k,v]) => <div key={k} style={{ display:'flex', justifyContent:'space-between', font:'400 14px/1 Inter, sans-serif', color:'#2E3340' }}>
+              <span>{k}</span><Mono>{v}</Mono>
+            </div>)}
+          </div>
+        </div>
+        <div style={{ background:'#FDFBF6', border:'1px solid #D8D2C3', borderRadius:8, padding:20 }}>
+          <Eyebrow>Sources</Eyebrow>
+          <div style={{ marginTop:12, font:'400 14px/1.7 Inter, sans-serif', color:'#2E3340' }}>
+            The Hindu · 5<br/>
+            Indian Express · 4<br/>
+            PIB · 2<br/>
+            LiveLaw · 1
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>;
+}
+
+function AskView() {
+  const [value, setValue] = useState('Explain cooperative federalism with respect to GST Council');
+  const [intent, setIntent] = useState('concept');
+  const [response, setResponse] = useState('Cooperative federalism, in the Indian constitutional scheme, denotes a working relationship between the Union and the States that pursues coordinated outcomes rather than jurisdictional rivalry. The GST Council under Article 279A is the most consequential modern expression: a constitutional body where the Centre holds a one-third weight and States together hold two-thirds, with decisions requiring a three-fourths majority. The arrangement institutionalises bargaining without surrendering autonomy.');
+  const [loading, setLoading] = useState(false);
+  return <div style={{ maxWidth:760, margin:'0 auto' }}>
+    <div style={{ marginBottom:24 }}>
+      <Eyebrow>Ask</Eyebrow>
+      <h1 style={{ font:'700 32px/1.2 Spectral, serif', letterSpacing:'-0.01em', margin:'6px 0 0', color:'#1A1F2E' }}>
+        Routed to a specialist agent.
+      </h1>
+    </div>
+    <AskBox value={value} onChange={setValue} intent={intent} response={response} loading={loading}
+      onSubmit={() => { setLoading(true); setResponse(''); setTimeout(() => { setLoading(false); setResponse('Cooperative federalism, in the Indian constitutional scheme, denotes a working relationship between the Union and the States that pursues coordinated outcomes rather than jurisdictional rivalry. The GST Council under Article 279A is the most consequential modern expression.'); }, 800); }}
+    />
+    <div style={{ marginTop:24, display:'flex', gap:8, flexWrap:'wrap' }}>
+      {['concept','doubt','mcq','mains','essay','anthro'].map(i => <button key={i} onClick={() => setIntent(i)} style={{
+        font:'500 12px/1 Inter, sans-serif', textTransform:'uppercase', letterSpacing:'0.08em',
+        padding:'8px 12px', borderRadius:9999, cursor:'pointer',
+        background: intent===i ? '#1A1F2E' : 'transparent',
+        color: intent===i ? '#FDFBF6' : '#6E6759',
+        border: '1px solid ' + (intent===i ? '#1A1F2E' : '#D8D2C3'),
+      }}>{i}</button>)}
+    </div>
+  </div>;
+}
+
+function PracticeView() {
+  const [selected, setSelected] = useState({});
+  const [revealed, setRevealed] = useState({});
+  return <div style={{ maxWidth:760, margin:'0 auto' }}>
+    <div style={{ marginBottom:24, display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
+      <div>
+        <Eyebrow>Practice · calibrated to weak areas</Eyebrow>
+        <h1 style={{ font:'700 32px/1.2 Spectral, serif', letterSpacing:'-0.01em', margin:'6px 0 0', color:'#1A1F2E' }}>
+          Two questions on Federalism.
+        </h1>
+      </div>
+      <Button variant="secondary">New set</Button>
+    </div>
+    {MCQS.map(q => <MCQItem key={q.id} q={q} selected={selected[q.id]} revealed={revealed[q.id]}
+      onSelect={i => { setSelected(s => ({...s,[q.id]:i})); setTimeout(() => setRevealed(r => ({...r,[q.id]:true})), 300); }}
+    />)}
+  </div>;
+}
+
+function WeakView() {
+  return <div style={{ maxWidth:920, margin:'0 auto' }}>
+    <div style={{ marginBottom:24 }}>
+      <Eyebrow>Weak Areas</Eyebrow>
+      <h1 style={{ font:'700 32px/1.2 Spectral, serif', letterSpacing:'-0.01em', margin:'6px 0 8px', color:'#1A1F2E' }}>
+        Three topics below threshold.
+      </h1>
+      <p style={{ font:'400 16px/1.6 Spectral, serif', color:'#4D4738', margin:0 }}>
+        Anything below 70% accuracy is surfaced here. Question generation weights toward these topics automatically.
+      </p>
+    </div>
+    <div style={{ background:'#FDFBF6', border:'1px solid #D8D2C3', borderRadius:8, padding:'4px 24px' }}>
+      {WEAK.map((w,i) => <WeakAreaRow key={i} {...w}/>)}
+    </div>
+  </div>;
+}
+
+function ArchiveView() {
+  const days = ['26 Apr','25 Apr','24 Apr','23 Apr','22 Apr','21 Apr','20 Apr'];
+  return <div style={{ maxWidth:760, margin:'0 auto' }}>
+    <div style={{ marginBottom:24 }}>
+      <Eyebrow>Archive</Eyebrow>
+      <h1 style={{ font:'700 32px/1.2 Spectral, serif', letterSpacing:'-0.01em', margin:'6px 0 0', color:'#1A1F2E' }}>
+        Every digest, since you started.
+      </h1>
+    </div>
+    <div style={{ background:'#FDFBF6', border:'1px solid #D8D2C3', borderRadius:8, overflow:'hidden' }}>
+      {days.map((d,i) => <div key={d} style={{
+        display:'grid', gridTemplateColumns:'120px 1fr 80px', gap:16, alignItems:'center',
+        padding:'14px 24px', borderBottom: i < days.length-1 ? '1px solid #E8E3D7' : 'none',
+        cursor:'pointer',
+      }}>
+        <Mono color="#1A1F2E">{d}</Mono>
+        <div style={{ font:'400 15px/1.4 Spectral, serif', color:'#2E3340' }}>
+          {[12,9,11,14,8,10,13][i]} articles · {[3,2,3,4,2,3,4][i]} essay-grade
+        </div>
+        <div style={{ textAlign:'right' }}><Icon name="chevron-right" size={16}/></div>
+      </div>)}
+    </div>
+  </div>;
+}
+
+function App() {
+  const [tab, setTab] = useState('today');
+  return <AppShell tab={tab} setTab={setTab}>
+    {tab==='today' && <TodayView/>}
+    {tab==='ask' && <AskView/>}
+    {tab==='practice' && <PracticeView/>}
+    {tab==='weak' && <WeakView/>}
+    {tab==='archive' && <ArchiveView/>}
+  </AppShell>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

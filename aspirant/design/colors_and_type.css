@@ -1,0 +1,113 @@
+/* ==========================================================================
+   UPSC Brain Agent — Foundations
+   Colors, type, spacing, radii, shadows.
+   Import this file into any preview, kit, or production stylesheet.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* --- Core palette ---------------------------------------------------- */
+  --ink:        #1A1F2E;   /* primary text, primary fill */
+  --paper:      #F7F2E8;   /* app canvas — warm cream */
+  --paper-white:#FDFBF6;   /* cards on canvas */
+  --marigold:   #D97706;   /* accent — highlights, "today" */
+  --vermillion: #B23A3A;   /* error, weak area, incorrect */
+  --sage:       #3F6B5C;   /* success, correct, verified */
+
+  /* --- Ink scale (9 steps) -------------------------------------------- */
+  --ink-50:  #F4F1EA;
+  --ink-100: #E8E3D7;
+  --ink-150: #D8D2C3;
+  --ink-200: #BDB6A6;
+  --ink-300: #948D7E;
+  --ink-400: #6E6759;
+  --ink-500: #4D4738;
+  --ink-700: #2E3340;
+  --ink-900: #1A1F2E;
+
+  /* --- Semantic foreground / background ------------------------------- */
+  --fg-1: var(--ink-900);          /* primary text */
+  --fg-2: var(--ink-500);          /* secondary text */
+  --fg-3: var(--ink-300);          /* meta, captions */
+  --fg-inverse: var(--paper-white);
+
+  --bg-canvas: var(--paper);
+  --bg-surface: var(--paper-white);
+  --bg-sunken: var(--ink-50);
+
+  --border-1: var(--ink-150);      /* default border */
+  --border-2: var(--ink-100);      /* hairline / inner divider */
+
+  /* --- Type families --------------------------------------------------- */
+  --font-serif: 'Spectral', 'Iowan Old Style', Georgia, serif;
+  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:  'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+  /* --- Type scale (semantic) ------------------------------------------ */
+  --t-display: 700 44px/1.15 var(--font-serif);
+  --t-h1:      600 32px/1.25 var(--font-serif);
+  --t-h2:      600 24px/1.30 var(--font-serif);
+  --t-h3:      600 18px/1.35 var(--font-sans);
+  --t-eyebrow: 600 11px/1.20 var(--font-sans);    /* uppercase, tracked */
+  --t-body-read:    400 17px/1.65 var(--font-serif);  /* digest, essay */
+  --t-body:         400 15px/1.55 var(--font-sans);   /* UI body */
+  --t-body-sm:      400 13px/1.50 var(--font-sans);
+  --t-meta:         500 12px/1.40 var(--font-sans);
+  --t-mono:         500 13px/1.40 var(--font-mono);   /* PYQ codes */
+  --t-button:       500 14px/1   var(--font-sans);
+
+  /* --- Spacing (4px base) --------------------------------------------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  /* --- Radii ----------------------------------------------------------- */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-pill: 9999px;
+
+  /* --- Shadows --------------------------------------------------------- */
+  --shadow-1: 0 1px 2px rgba(26, 31, 46, 0.06);
+  --shadow-2: 0 8px 24px rgba(26, 31, 46, 0.10);
+
+  /* --- Motion ---------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 100ms;
+  --dur-base: 200ms;
+  --dur-slow: 600ms;
+
+  /* --- Layout ---------------------------------------------------------- */
+  --max-read: 720px;
+  --max-app:  1180px;
+}
+
+/* --- Element defaults (opt-in, scoped under .ds-base) ------------------ */
+.ds-base {
+  font: var(--t-body);
+  color: var(--fg-1);
+  background: var(--bg-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.ds-base h1 { font: var(--t-h1); margin: 0; letter-spacing: -0.01em; }
+.ds-base h2 { font: var(--t-h2); margin: 0; letter-spacing: -0.005em; }
+.ds-base h3 { font: var(--t-h3); margin: 0; }
+.ds-base p  { margin: 0; }
+.ds-base .display { font: var(--t-display); letter-spacing: -0.015em; }
+.ds-base .eyebrow {
+  font: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--fg-2);
+}
+.ds-base .read { font: var(--t-body-read); color: var(--fg-1); }
+.ds-base .meta { font: var(--t-meta); color: var(--fg-3); }
+.ds-base code, .ds-base .mono { font: var(--t-mono); color: var(--fg-2); }

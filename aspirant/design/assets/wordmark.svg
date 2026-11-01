@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" width="220" height="48">
+  <g fill="none" stroke="none">
+    
+    <g transform="translate(4, 8)">
+      
+      <path d="M16 4 C 14 8, 14 12, 16 14 C 18 12, 18 8, 16 4 Z" fill="#D97706"></path>
+      
+      <path d="M4 22 C 4 26, 8 30, 16 30 C 24 30, 28 26, 28 22 L 4 22 Z" fill="#1A1F2E"></path>
+      
+      <line x1="16" y1="14" x2="16" y2="22" stroke="#1A1F2E" stroke-width="1.5"></line>
+      
+      <ellipse cx="16" cy="22" rx="12" ry="2" fill="#1A1F2E"></ellipse>
+    </g>
+    <text x="44" y="32" font-family="Spectral, Georgia, serif" font-size="22" font-weight="600" fill="#1A1F2E" letter-spacing="-0.5">upsc<tspan fill="#D97706">.</tspan>brain</text>
+  </g>
+</svg>
